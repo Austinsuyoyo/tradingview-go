@@ -1,0 +1,17 @@
+version: "3.7"
+networks: 
+  reverse:
+    name: ReverseProxyBridge
+    external: true
+services:
+  trader:
+    container_name: tradingview-go
+    build: .
+    environment: 
+      - BINANCE_API_KEY=xxxxxxxxxxxxxx
+      - BINANCE_API_SECRET=xxxxxxxxxxxxxx
+      - PASSPHRASE=xxxxxxxxxxxxxx
+    networks: 
+      - reverse
+    ports:
+      - 8080:8080

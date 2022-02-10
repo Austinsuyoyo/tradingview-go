@@ -20,7 +20,6 @@ var (
 	apiSecret string = os.Getenv("BINANCE_API_SECRET")
 )
 
-
 func HandleFuturesStrategy(c *gin.Context) {
 	jsonData, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
@@ -35,9 +34,9 @@ func HandleFuturesStrategy(c *gin.Context) {
 		c.String(http.StatusBadRequest, "wrong passphrase")
 		return
 	}
-	
+
 	side := strings.ToUpper(alert.Strategy.OrderAction)
-	quantity := fmt.Sprintf("%f", alert.Strategy.OrderContracts)
+	quantity := fmt.Sprintf("%.3f", alert.Strategy.OrderContracts)
 	symbol := alert.Ticker
 	fmt.Printf("trading side: %v, quantity: %v\n", side, quantity)
 	futuresClient := binance.NewFuturesClient(apiKey, apiSecret)
@@ -70,7 +69,7 @@ func HandleStrategy(c *gin.Context) {
 	symbol := alert.Ticker
 	fmt.Printf("trading side: %v, quantity: %v\n", side, quantity)
 	client := binance.NewClient(apiKey, apiSecret)
-	
+
 	order, err := client.NewCreateOrderService().Symbol(symbol).Side(binance.SideType(side)).Type(binance.OrderTypeMarket).Quantity(quantity).Do(context.Background())
 	if err != nil {
 		c.String(http.StatusBadRequest, "create order fail %v", err)
@@ -79,6 +78,3 @@ func HandleStrategy(c *gin.Context) {
 	fmt.Println(order)
 	c.String(http.StatusOK, "create order success")
 }
-
-
-
